@@ -1,0 +1,30 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Deshabilitar navegación directa de directorios
+Options -Indexes
+
+# Proteger archivos sensibles
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+<IfModule mod_headers.c>
+  # Permitir el origen específico (tu frontend local)
+  Header set Access-Control-Allow-Origin "http://localhost:3000"
+  
+  # Permitir métodos
+  Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+  
+  # Permitir los encabezados específicos
+  Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+  
+  # Permitir cookies y credenciales
+  Header set Access-Control-Allow-Credentials "true"
+  
+  # Responder a las solicitudes OPTIONS
+  SetEnvIf Request_Method OPTIONS preflight_request
+  Header set Access-Control-Max-Age "1728000" env=preflight_request
+</IfModule>
